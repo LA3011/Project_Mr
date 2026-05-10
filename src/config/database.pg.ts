@@ -6,14 +6,15 @@ dotenv.config();
 const { Pool } = pg;
 
 const pool = new Pool({
+  ssl: { rejectUnauthorized: false }, // REQUERIDO para Neon
   host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT) || 5432,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: Number(process.env.DB_PORT) || 5432,
-  max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
+  max: 20,
 });
 
 // Helper (Ejecutar consultas)
@@ -25,10 +26,19 @@ export const query = (text: string, params?: any[]) => {
 pool.on('connect', () => {
   console.log('[Postgres] Conexión a PostgreSQL establecida correctamente');
 });
-
 pool.on('error', (err) => {
-  console.error('(Error-DataBase) Inesperado en el Pool de Postgres', err);
+  console.error('[Postgres-Error] Inesperado en el Pool de Postgres', err);
   process.exit(-1);
 });
+
+// Testing Conexión 
+export const viewConnection = async () => {
+  try {
+    const res = await pool.query('SELECT NOW()');
+    console.log(`[Postgres] DataBase Conectada (${res.rows[0].now})`);
+  } catch (err: any) {
+    console.error('[Postgres-Error] Fallo Crítico Conectividad', err.message);
+  }
+};
 
 export default pool;
