@@ -1,17 +1,17 @@
 import pg from 'pg';
 import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv.config();
 
 const { Pool } = pg;
 
 const pool = new Pool({
   ssl: { rejectUnauthorized: false }, // REQUERIDO para Neon
-  host: process.env.DB_HOST,
+  host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 5432,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  user: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASSWORD || 'root',
+  database: process.env.DB_NAME || 'AKI_local',
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
   max: 20,
