@@ -20,6 +20,86 @@ const router = Router();
  *     responses:
  *       200:
  *         description: "Logs globales recuperados en orden cronológico inverso (success true, data logs)"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id_bitacora:
+ *                         type: integer
+ *                         example: 4
+ *                       id_administrador:
+ *                         type: integer
+ *                         example: 1
+ *                       id_modulo:
+ *                         type: integer
+ *                         example: 1
+ *                       accion:
+ *                         type: string
+ *                         example: "INSERT"
+ *                       tabla_afectada:
+ *                         type: string
+ *                         example: "empresas"
+ *                       registro_id:
+ *                         type: integer
+ *                         example: 5
+ *                       ip_usuario:
+ *                         type: string
+ *                         example: "192.168.1.123"
+ *                       dispositivo:
+ *                         type: string
+ *                         example: "testing"
+ *                       fecha:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2026-05-24T17:36:56.090Z"
+ *             example:
+ *               success: true
+ *               data:
+ *                 - id_bitacora: 4
+ *                   id_administrador: 1
+ *                   id_modulo: 1
+ *                   accion: "INSERT"
+ *                   tabla_afectada: "empresas"
+ *                   registro_id: 5
+ *                   ip_usuario: "192.168.1.123"
+ *                   dispositivo: "testing"
+ *                   fecha: "2026-05-24T17:36:56.090Z"
+ *                 - id_bitacora: 3
+ *                   id_administrador: 1
+ *                   id_modulo: 1
+ *                   accion: "INSERT"
+ *                   tabla_afectada: "empresas"
+ *                   registro_id: 3
+ *                   ip_usuario: "192.168.1.123"
+ *                   dispositivo: "testing"
+ *                   fecha: "2026-05-24T17:36:37.354Z"
+ *                 - id_bitacora: 2
+ *                   id_administrador: 2
+ *                   id_modulo: 2
+ *                   accion: "INSERT"
+ *                   tabla_afectada: "empresas"
+ *                   registro_id: 2
+ *                   ip_usuario: "192.168.1.124"
+ *                   dispositivo: "testing"
+ *                   fecha: "2026-05-24T17:32:51.676Z"
+ *                 - id_bitacora: 1
+ *                   id_administrador: 1
+ *                   id_modulo: 1
+ *                   accion: "INSERT"
+ *                   tabla_afectada: "empresas"
+ *                   registro_id: 1
+ *                   ip_usuario: "192.168.1.123"
+ *                   dispositivo: "testing"
+ *                   fecha: "2026-05-24T17:28:38.851Z"
  *       401:
  *         description: No autorizado
  */
@@ -39,15 +119,79 @@ router.get('/', authenticateJWT, getLogs);
  *         required: true
  *         schema:
  *           type: string
+ *         description: ID del registro de bitácora a consultar
  *     responses:
  *       200:
  *         description: "Evento localizado de forma correcta (success true, data log)"
- *       400:
- *         description: "El ID de bitácora suministrado no es válido"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id_bitacora:
+ *                       type: integer
+ *                       example: 1
+ *                     id_administrador:
+ *                       type: integer
+ *                       example: 1
+ *                     id_modulo:
+ *                       type: integer
+ *                       example: 1
+ *                     accion:
+ *                       type: string
+ *                       example: "INSERT"
+ *                     tabla_afectada:
+ *                       type: string
+ *                       example: "empresas"
+ *                     registro_id:
+ *                       type: integer
+ *                       example: 1
+ *                     ip_usuario:
+ *                       type: string
+ *                       example: "192.168.1.123"
+ *                     dispositivo:
+ *                       type: string
+ *                       example: "testing"
+ *                     fecha:
+ *                       type: string
+ *                       format: date-time
+ *                       example: "2026-05-24T17:28:38.851Z"
+ *             example:
+ *               success: true
+ *               data:
+ *                 id_bitacora: 1
+ *                 id_administrador: 1
+ *                 id_modulo: 1
+ *                 accion: "INSERT"
+ *                 tabla_afectada: "empresas"
+ *                 registro_id: 1
+ *                 ip_usuario: "192.168.1.123"
+ *                 dispositivo: "testing"
+ *                 fecha: "2026-05-24T17:28:38.851Z"
  *       401:
  *         description: No autorizado
  *       404:
  *         description: Registro de auditoría no encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Registro de auditoría no encontrado"
+ *             example:
+ *               success: false
+ *               message: "Registro de auditoría no encontrado"
  */
 router.get('/:id', authenticateJWT, getLogById);
 
@@ -65,9 +209,81 @@ router.get('/:id', authenticateJWT, getLogById);
  *         required: true
  *         schema:
  *           type: string
+ *         description: ID del administrador para filtrar sus acciones en la bitácora
  *     responses:
  *       200:
  *         description: "Rastro de acciones del usuario devuelto exitosamente (success true, data logs)"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id_bitacora:
+ *                         type: integer
+ *                         example: 4
+ *                       id_administrador:
+ *                         type: integer
+ *                         example: 1
+ *                       id_modulo:
+ *                         type: integer
+ *                         example: 1
+ *                       accion:
+ *                         type: string
+ *                         example: "INSERT"
+ *                       tabla_afectada:
+ *                         type: string
+ *                         example: "empresas"
+ *                       registro_id:
+ *                         type: integer
+ *                         example: 5
+ *                       ip_usuario:
+ *                         type: string
+ *                         example: "192.168.1.123"
+ *                       dispositivo:
+ *                         type: string
+ *                         example: "testing"
+ *                       fecha:
+ *                         type: string
+ *                         format: date-time
+ *                         example: "2026-05-24T17:36:56.090Z"
+ *             example:
+ *               success: true
+ *               data:
+ *                 - id_bitacora: 4
+ *                   id_administrador: 1
+ *                   id_modulo: 1
+ *                   accion: "INSERT"
+ *                   tabla_afectada: "empresas"
+ *                   registro_id: 5
+ *                   ip_usuario: "192.168.1.123"
+ *                   dispositivo: "testing"
+ *                   fecha: "2026-05-24T17:36:56.090Z"
+ *                 - id_bitacora: 3
+ *                   id_administrador: 1
+ *                   id_modulo: 1
+ *                   accion: "INSERT"
+ *                   tabla_afectada: "empresas"
+ *                   registro_id: 3
+ *                   ip_usuario: "192.168.1.123"
+ *                   dispositivo: "testing"
+ *                   fecha: "2026-05-24T17:36:37.354Z"
+ *                 - id_bitacora: 1
+ *                   id_administrador: 1
+ *                   id_modulo: 1
+ *                   accion: "INSERT"
+ *                   tabla_afectada: "empresas"
+ *                   registro_id: 1
+ *                   ip_usuario: "192.168.1.123"
+ *                   dispositivo: "testing"
+ *                   fecha: "2026-05-24T17:28:38.851Z"
  *       400:
  *         description: "El ID de administrador no es válido para la búsqueda forense"
  *       401:
@@ -134,6 +350,6 @@ router.get('/administrator/:id_administrador', authenticateJWT, getLogsByAdmin);
  *       401:
  *         description: No autorizado
  */
-router.post('/', authenticateJWT, createLog);
+// router.post('/', authenticateJWT, createLog);
 
 export default router;

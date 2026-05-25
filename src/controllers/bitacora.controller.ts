@@ -34,9 +34,9 @@ export const getLogsByAdmin = catchAsync(async (req: Request, res: Response) => 
 });
 
 export const createLog = catchAsync(async (req: Request, res: Response) => {
-    const { id_bitacora, id_administrador, id_modulo, accion, tabla_afectada, registro_id } = req.body;
+    const { id_administrador, id_modulo, accion, tabla_afectada, registro_id } = req.body;
 
-    if (!id_bitacora || !id_administrador || !id_modulo || !accion || !tabla_afectada || !registro_id) {
+    if (!id_administrador || !id_modulo || !accion || !tabla_afectada || !registro_id) {
         return res.status(400).json({
             success: false,
             message: 'Faltan parámetros críticos de auditoría para asentar el registro'

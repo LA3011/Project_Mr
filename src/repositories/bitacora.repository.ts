@@ -25,14 +25,13 @@ export const BitacoraRepository = {
     async create(data: Partial<Bitacora>): Promise<Bitacora> {
         const sql = `
             INSERT INTO public.bitacora (
-                id_bitacora, id_administrador, id_modulo, accion, 
+                id_administrador, id_modulo, accion, 
                 tabla_afectada, registro_id, ip_usuario, dispositivo, fecha
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING ${FIELDS}
         `;
         const values = [
-            data.id_bitacora,
             data.id_administrador,
             data.id_modulo,
             data.accion,

@@ -50,7 +50,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/rewards', rewardRoutes);
 app.use('/api/profiles', profileRoutes);
-app.use('/api/bitacoras', bitacoraRoutes); // no post / delete
+app.use('/api/bitacoras', bitacoraRoutes); 
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/categories', categoryRoutes);
