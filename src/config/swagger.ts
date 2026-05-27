@@ -1,4 +1,5 @@
 import swaggerJSDoc from 'swagger-jsdoc';
+import path from 'path';
 
 const swaggerOptions: swaggerJSDoc.Options = {
   definition: {
@@ -25,7 +26,11 @@ const swaggerOptions: swaggerJSDoc.Options = {
   },
   apis: [
     './src/routes/*.ts', 
-    './dist/routes/*.js'
+    './dist/routes/*.js',
+    './src/routes/**/*.ts',
+    './dist/routes/**/*.ts',
+    path.join(__dirname, '../routes/**/*.ts'),
+    path.join(__dirname, '../../dist/routes/**/*.js'),
   ], 
 };
 
