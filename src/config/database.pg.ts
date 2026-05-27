@@ -7,14 +7,14 @@ const { Pool } = pg;
 
 const pool = new Pool({
   ssl: { rejectUnauthorized: false }, // REQUERIDO para Neon
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 5432,
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'root',
-  database: process.env.DB_NAME || 'AKI_local',
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
-  max: 20,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  idleTimeoutMillis: 15000,
+  connectionTimeoutMillis: 10000,
+  max: 2,
 });
 
 // Helper (Ejecutar consultas)
