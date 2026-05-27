@@ -102,5 +102,53 @@ export const UserRepository = {
     `;
     const { rows } = await query(sql, [id]);
     return rows[0] || null;
+  },
+
+  async saveRecoveryToken(id: string | number, token: string, expires: Date): Promise<void> {
+    const sql = `
+      UPDATE public.usuarios 
+      SET token_recuperacion = $1, 
+          token_recuperacion_expira = $2 
+      WHERE id_usuario = $3;
+    `;
+    try {
+      await query(sql, [token, expires, id]);
+    } catch (err: any) {
+      console.error('[Server] User-Repository: Error en saveRecoveryToken:', err.message);
+      throw new Error('Error al guardar el token de recuperación');
+    }
+  },
+  
+  async findByResetToken(token: string): Promise<any | null> {
+    const sql = `
+      SELECT id_usuario, token_recuperacion_expira 
+      FROM public.usuarios 
+      WHERE token_recuperacion = $1;
+    `;
+    try {
+      const { rows } = await query(sql, [token]);
+      if (rows.length === 0) return null;
+      return rows[0];
+    } catch (err: any) {
+      console.error('[Server] User-Repository: Error en findByResetToken:', err.message);
+      throw new Error('Error al buscar el token de recuperación');
+    }
+  },
+  
+  async updatePasswordAndClearToken(id: string | number, hashedPassword: string): Promise<void> {
+    const sql = `
+      UPDATE public.usuarios 
+      SET password_hash = $1, 
+          token_recuperacion = NULL, 
+          token_recuperacion_expira = NULL 
+      WHERE id_usuario = $2;
+    `;
+    try {
+      await query(sql, [hashedPassword, id]);
+    } catch (err: any) {
+      console.error('[Server] User-Repository: Error en updatePasswordAndClearToken:', err.message);
+      throw new Error('Error al actualizar la contraseña y limpiar tokens');
+    }
   }
+
 }; 

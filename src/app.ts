@@ -34,6 +34,7 @@ const app: Application = express();
 app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || 'localhost'
+const PROTOCOL = process.env.PROTOCOL || 'http'
 
 // Test Conectividad DataBase
 viewConnection();
@@ -67,5 +68,5 @@ app.use('/api/profile-module-privileges', profileModulePrivilegeRoutes); //
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`[Server] running on http://${HOST}:${PORT}`);
+  console.log(`[Server] running on ${PROTOCOL}://${HOST}:${PORT}`);
 });

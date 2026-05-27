@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { authRateLimit } from '../middlewares/rateLimit.handler.js';
-import { login, refreshToken, register } from '../controllers/auth.controller.js';
+import { forgotPassword, login, refreshToken, register, resetPassword } from '../controllers/auth.controller.js';
 
 const router = Router();
 
@@ -171,5 +171,123 @@ router.post('/login', authRateLimit, login);
  *         description: Token inválido { message, error }
  */
 router.post('/refresh-token', refreshToken);
+
+/**
+ * @openapi
+ * /api/auth/forgot-password:
+ *   post:
+ *     summary: Solicita la recuperación de contraseña
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: usuario@correo.com
+ *     responses:
+ *       200:
+ *         description: Respuesta exitosa de protección (evita enumeración de correos)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Si el correo está registrado, se enviará un enlace de recuperación."
+ *       400:
+ *         description: El correo electrónico no fue proporcionado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "El correo electrónico es requerido."
+ *       500:
+ *         description: Error interno en el servidor
+ */
+router.post('/forgot-password', forgotPassword)
+
+/**
+ * @openapi
+ * /api/auth/reset-password:
+ *   post:
+ *     summary: Restablece la contraseña utilizando un token de validación
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: query
+ *         name: token
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Token de recuperación (alternativa a enviarlo en el body)
+ *         example: "<token>"
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newPassword
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Token de recuperación (puede enviarse aquí o como query string)
+ *                 example: "<token>"
+ *               newPassword:
+ *                 type: string
+ *                 description: La nueva contraseña para la cuenta
+ *                 example: "NuevaClaveLA"
+ *     responses:
+ *       200:
+ *         description: Contraseña restablecida con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Tu contraseña ha sido restablecida con éxito. Ya puedes iniciar sesión."
+ *       400:
+ *         description: Error en la validación de los datos o token inválido/expirado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "El enlace de recuperación es inválido o ya fue utilizado."
+ *             example:
+ *               success: false
+ *               message: "El enlace de recuperación es inválido o ya fue utilizado."
+ *       500:
+ *         description: Error interno en el servidor
+ */
+router.post('/reset-password', resetPassword)
+
 
 export default router;
