@@ -44,8 +44,15 @@ app.use(cors());
 app.use(express.json());
 app.use(globalRateLimit);
  
+// View | Download Doc 
+if (process.env.NODE_ENV !== 'production') {
+  app.get('/api-docs.json', (req, res) => {
+    res.json(swaggerDocs);
+  });
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+}
+
 // Rutas 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/clients', clientRoutes);
